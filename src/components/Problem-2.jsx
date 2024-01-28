@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-
 const customStylesA = {
   content: {
     content: "center",
@@ -23,13 +22,32 @@ const Problem2 = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [Contacts, setContacts] = useState([]);
   const [oneContacts, setoneContacts] = useState({});
-  useEffect(() => {
+  const fetchContacts = () => {
     axios
       .get(
         `https://contact.mediusware.com/api/contacts/?page=1&search=${searchTerm}`
       )
-      .then((res) => setContacts(res.data.results));
+      .then((res) => {
+        setContacts(res.data.results);
+      });
+  };
+  useEffect(() => {
+    setContacts([]);
+    fetchContacts();
   }, [searchTerm]);
+  const filteredData = showEvenIds
+    ? Contacts.filter((item) => item.id % 2 === 0)
+    : Contacts;
+  const handleContacts = (id) => {
+    openModalC();
+    const NewContact = Contacts.find((contact) => contact.id === id);
+    console.log(NewContact);
+    setoneContacts(NewContact);
+    console.log(oneContacts);
+  };
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
   function openModalA() {
     setBIsOpen(false);
     setAIsOpen(true);
@@ -52,20 +70,6 @@ const Problem2 = () => {
   }
   const handleChange = () => {
     setShowEvenIds(!showEvenIds);
-  };
-  console.log(Contacts);
-  const filteredData = showEvenIds
-    ? Contacts.filter((item) => item.id % 2 === 0)
-    : Contacts;
-  const handleContacts = (id) => {
-    openModalC();
-    const NewContact = Contacts.find((contact) => contact.id === id);
-    console.log(NewContact);
-    setoneContacts(NewContact);
-    console.log(oneContacts);
-  };
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
   };
   return (
     <div className="container">

@@ -108,7 +108,10 @@ const Problem1 = () => {
                 {datas
                   ?.filter(
                     (data) =>
-                      data.status === "completed" || data.status === "Completed"
+                      data.status === "completed" ||
+                      data.status === "Completed" ||
+                      data.status === "complete" ||
+                      data.status === "Complete"
                   )
                   .map((data, index) => (
                     <tr key={index}>
