@@ -2,6 +2,15 @@ import React, { useState } from "react";
 
 const Problem1 = () => {
   const [show, setShow] = useState("all");
+  const [datas, setData] = useState([]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const input = e.target;
+    const name = input.name.value;
+    const status = input.status.value;
+    const newData = { name, status };
+    setData((prevData) => [...prevData, newData]);
+  };
   const handleClick = (val) => {
     setShow(val);
   };
@@ -10,15 +19,26 @@ const Problem1 = () => {
       <div className="row justify-content-center mt-5">
         <h4 className="text-center text-uppercase mb-5">Problem-1</h4>
         <div className="col-6 ">
-          <form className="row gy-2 gx-3 align-items-center mb-4">
+          <form
+            onSubmit={handleSubmit}
+            className="row gy-2 gx-3 align-items-center mb-4"
+          >
             <div className="col-auto">
-              <input type="text" className="form-control" placeholder="Name" />
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Name"
+                name="name"
+                required
+              />
             </div>
             <div className="col-auto">
               <input
                 type="text"
                 className="form-control"
                 placeholder="Status"
+                name="status"
+                required
               />
             </div>
             <div className="col-auto">
@@ -66,7 +86,65 @@ const Problem1 = () => {
                 <th scope="col">Status</th>
               </tr>
             </thead>
-            <tbody></tbody>
+
+            {show === "active" && (
+              <tbody>
+                {datas
+                  ?.filter(
+                    (data) =>
+                      data.status === "active" || data.status === "Active"
+                  )
+                  .map((data, index) => (
+                    <tr key={index}>
+                      <td>{data.name}</td>
+                      <td>{data.status}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            )}
+
+            {show === "completed" && (
+              <tbody>
+                {datas
+                  ?.filter(
+                    (data) =>
+                      data.status === "completed" || data.status === "Completed"
+                  )
+                  .map((data, index) => (
+                    <tr key={index}>
+                      <td>{data.name}</td>
+                      <td>{data.status}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            )}
+
+            {show === "all" && (
+              <tbody>
+                {datas
+                  ?.sort((a, b) => {
+                    if (a.status === "active" && b.status !== "active") {
+                      return -1;
+                    }
+                    if (a.status !== "active" && b.status === "active") {
+                      return 1;
+                    }
+                    if (a.status === "completed" && b.status !== "completed") {
+                      return -1;
+                    }
+                    if (a.status !== "completed" && b.status === "completed") {
+                      return 1;
+                    }
+                    return 0;
+                  })
+                  .map((data, index) => (
+                    <tr key={index}>
+                      <td>{data.name}</td>
+                      <td>{data.status}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            )}
           </table>
         </div>
       </div>
